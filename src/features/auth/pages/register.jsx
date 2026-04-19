@@ -19,12 +19,17 @@ const Register = () => {
 
     const { handleRegister } = useAuth();
     const navigate = useNavigate();
+    const [successMessage, setSuccessMessage] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Register submitted:', formData);
-        await handleRegister(formData);
-        navigate("/");
+        try {
+            await handleRegister(formData);
+            setSuccessMessage("Registration successful! Please check your email to verify your account before logging in.");
+            setFormData({ username: '', email: '', password: '' });
+        } catch (error) {
+            console.error('Registration failed:', error);
+        }
     };
 
     return (
@@ -62,6 +67,12 @@ const Register = () => {
                     </h1>
                     <p className="text-zinc-400">Join our premium community today</p>
                 </div>
+
+                {successMessage && (
+                    <div className="mb-6 p-4 rounded-xl bg-[#31b8c6]/10 border border-[#31b8c6]/20 text-[#31b8c6] text-sm text-center">
+                        {successMessage}
+                    </div>
+                )}
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
